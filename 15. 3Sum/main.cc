@@ -1,5 +1,4 @@
 /**
- * @file main.cc
  * @author lqch
  * @brief O(n^2 lg(n)) solution
  * @version 0.1
@@ -10,46 +9,32 @@
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
-        set<vector<int>> output;
+        map<int, set<pair<int, int>>> m;
         vector<vector<int>> ret;
+        for(auto i = 0; i < nums.size(); ++i) {
+            for(auto j = i+1; j < nums.size(); ++j) {
+                auto x = nums[i], y = nums[j];
+                auto xy = (x < y) ? pair<int, int>(x, y): pair<int, int>(y, x); 
 
-        for(int i=2; i<nums.size(); ++i) {
-            if(it == used.end()) {
-                auto v = twoSum(nums, i-1, 0-nums[i]);
-                if(v.size() != 0) {
-                    for(auto x: v) {
-                        x.push_back(nums[i]);
-                        ret.push_back(x);
-                    }
+                auto it = m.find(x + y);
+                if(it == m.end()) 
+                    it->second.insert(xy);
+                else 
+                    auto temp_set = set<pair<int, int>> {xy};
+                    // m.insert(pair<int, set<pair<int, int>> { x+y, set<pair<int, int>>{xy} });
+                    m.insert(pair<int, set<pair<int, int>(x+y, temp_set));
+            }
+        }
+
+        for(auto x: nums) {
+            auto y = 0 - x;
+            auto it = m.find(y);
+            if(it == m.end()) {
+                for(auto one_pair: it->second) {
+                    ret.push_back(vector<int> {one_pair.first, one_pair.second, y});
                 }
             }
         }
-
-        return ret;
-    }
-    
-    vector<vector<int>> twoSum(vector<int>& nums, int last, int sum) {
-        set<int> m;
-        vector<vector<int>> ret;
-        
-        for(int i=0; i<= last; ++i) {
-            auto x = nums[i], y = sum - nums[i];
-
-            auto it_y = m.find(y);
-            
-            // why it_y first ?
-            // to prevent the case when sum = 2x = 2y
-            // then x is inserted and found again
-            if(it_y != m.end()) { // y not exist
-                ret.push_back(vector<int>{x, y});
-            }
-
-            auto it_x = m.find(x);
-            if(it_x == m.end()) { // x not exist
-                m.insert(x);
-            }
-        }
-            
         return ret;
     }
 };
